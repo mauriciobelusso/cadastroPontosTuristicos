@@ -7,19 +7,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.myapplication.R;
 import com.example.user.trabalho1.entidade.PontosTuristicos;
-
-import java.io.File;
 
 
 public class FormularioHelper {
 
-    public  EditText etNome;
-    private final EditText etDescricao;
+    public EditText etNome;
+    public EditText etDescricao;
     public TextView tvLatitude;
     public TextView tvLongitude;
     public ImageView ivFoto;
-    public  String imageEncoded;
+    public String imageEncoded;
 
     private PontosTuristicos pontoTuristico;
 
