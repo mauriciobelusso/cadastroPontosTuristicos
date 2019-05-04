@@ -55,7 +55,6 @@ public class DatabaseHandler  extends SQLiteOpenHelper {
         registro.put("longitude", pontosTuristicos.getLongitude());
         registro.put("foto", pontosTuristicos.getFoto());//salva a imagem como BLOB utilizando o metodo que transforma imagem em byteArray
 
-
         //o insert vai olhar para o Content Values e vai tratar o conteúdo "pontosTuristicos.getNome()"
         //antes de montar a query sql que estamos querendo executar , evitando dessa forma que sejam
         //executados comandos "sql injection"
@@ -63,7 +62,6 @@ public class DatabaseHandler  extends SQLiteOpenHelper {
     }
 
     public List<PontosTuristicos> buscaPontosTuristicos() {
-
         String sql = "SELECT * FROM pontosTuristicos";
         SQLiteDatabase database = getReadableDatabase();
         Cursor c = database.rawQuery(sql,null);
@@ -87,7 +85,6 @@ public class DatabaseHandler  extends SQLiteOpenHelper {
     }
 
     public void deleta(PontosTuristicos pontosTuristicos){
-
         SQLiteDatabase database = getReadableDatabase();
 
         String[] params = {String.valueOf(pontosTuristicos.getCodPontoTuristico())};

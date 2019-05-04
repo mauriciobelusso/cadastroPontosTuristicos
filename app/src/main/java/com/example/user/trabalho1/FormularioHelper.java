@@ -18,7 +18,7 @@ public class FormularioHelper {
     private final EditText etDescricao;
     public TextView tvLatitude;
     public TextView tvLongitude;
-    private final ImageView ivFoto;
+    public ImageView ivFoto;
     public  String imageEncoded;
 
     private PontosTuristicos pontoTuristico;
@@ -30,7 +30,6 @@ public class FormularioHelper {
         tvLongitude = (TextView) activity.findViewById(R.id.tvLongitude);
         ivFoto = (ImageView) activity.findViewById(R.id.ivFoto);
         pontoTuristico = new PontosTuristicos();
-
     }
 
     public PontosTuristicos pegaPontoTuristico() {

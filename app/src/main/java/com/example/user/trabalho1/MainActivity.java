@@ -10,7 +10,7 @@ import android.widget.ListView;
 public class MainActivity extends AppCompatActivity {
 
     private ListView lvMenu;
-    private final  Class<?>[] menus = {
+    private final Class<?>[] menus = {
             PontosTuristicosActivity.class,
             ListActivity.class,
             MapaActivity.class
@@ -33,6 +33,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

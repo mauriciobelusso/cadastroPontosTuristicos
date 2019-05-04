@@ -1,14 +1,14 @@
 package com.example.user.trabalho1;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -54,7 +54,8 @@ public class ListActivity extends AppCompatActivity {
 
 
         //o ArrayAdapter vai converter cada um dos pontos turisticos em um textView e vai jogar na lista. Pois o listview só lê view não le string...
-        ArrayAdapter<PontosTuristicos> adapter = new ArrayAdapter<PontosTuristicos>(this, android.R.layout.simple_list_item_1, pontosTuristicosList);
+       // ArrayAdapter<PontosTuristicos> adapter = new ArrayAdapter<PontosTuristicos>(this, android.R.layout.simple_list_item_1, pontosTuristicosList);
+        ImageAdapter adapter = new ImageAdapter(this,pontosTuristicosList);
         listPontosTuristicos.setAdapter(adapter);
     }
 
@@ -64,24 +65,50 @@ public class ListActivity extends AppCompatActivity {
         carregarLista();
     }
 
+    private void alertDialog(final int position) {
+        AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+        dialog.setMessage("Tem certeza que deseja excluir?!");
+        dialog.setTitle("Excluir");
+        dialog.setPositiveButton("Sim",
+
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        PontosTuristicos pontosTuristicos = (PontosTuristicos) listPontosTuristicos.getItemAtPosition(position);
+
+                        DatabaseHandler databaseHandler = new DatabaseHandler(ListActivity.this);
+                        databaseHandler.deleta(pontosTuristicos);
+                        databaseHandler.close();
+                        carregarLista();
+                        Toast.makeText(ListActivity.this, "Ponto turistico " + pontosTuristicos.getNome() +" deletado", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        dialog.setNegativeButton("Não",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Toast.makeText(getApplicationContext(),"Cancelado",Toast.LENGTH_LONG).show();
+            }
+        });
+        AlertDialog alertDialog=dialog.create();
+        alertDialog.show();
+    }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo) {
         //menu.add = além de adicionar no menu ele retorna a referência do item que ele acabou de gerar dentro do menu
         MenuItem deletar = menu.add("Excluir");
         //Menu Item se refere ao Item deletar (item do menu de contexto) não ao item da lista
+
+
         deletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-                PontosTuristicos pontosTuristicos = (PontosTuristicos) listPontosTuristicos.getItemAtPosition(info.position);
+                alertDialog(((AdapterView.AdapterContextMenuInfo) menuInfo).position);
 
-                DatabaseHandler databaseHandler = new DatabaseHandler(ListActivity.this);
-                databaseHandler.deleta(pontosTuristicos);
-                databaseHandler.close();
 
-                Toast.makeText(ListActivity.this, "Deletar o ponto turístico" + pontosTuristicos.getNome(), Toast.LENGTH_SHORT).show();
 
-                carregarLista();
                 return false;
             }
         });

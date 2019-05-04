@@ -8,8 +8,6 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -20,24 +18,19 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.trabalho1.entidade.PontosTuristicos;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class PontosTuristicosActivity extends AppCompatActivity implements LocationListener{
+public class PontosTuristicosActivity extends AppCompatActivity implements LocationListener {
 
     private Button btIncluirPontosTuristicos;
     private FormularioHelper helper;
     private DatabaseHandler pontosTuristicosDatabase;
     private ImageView ivFoto;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,23 +40,31 @@ public class PontosTuristicosActivity extends AppCompatActivity implements Locat
 
         btIncluirPontosTuristicos = (Button) findViewById(R.id.btIncluirDisciplina);
         helper = new FormularioHelper(this);
-        ivFoto = findViewById( R.id.ivFoto );
+        ivFoto = findViewById(R.id.ivFoto);
 
         Intent intent = getIntent();
         PontosTuristicos pontosTuristicos = (PontosTuristicos) intent.getSerializableExtra("pontoTuristico");
 
-
-
-     //   LocationListener para recuperação dos dados do GPS
+        //   LocationListener para recuperação dos dados do GPS
         LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        //checagem da permissão no arquivo manifest.xml, sendo adicionada automaticamente
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            return;
+        if (pontosTuristicos != null) {
+            helper.preecheFormulario(pontosTuristicos);
+        } else {
+            //        é solicitada a verificação prévia
+            //        da permissão no arquivo de manifest.xml
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 0, this);
         }
-
 
         //verifica se o gps do celular está ligado, caso não esteja é mostrada uma mensagem
         //e manda para a tela de habilitar o gps
@@ -72,28 +73,19 @@ public class PontosTuristicosActivity extends AppCompatActivity implements Locat
             Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(i);
         }
-
-        if (pontosTuristicos != null) {
-            helper.preecheFormulario(pontosTuristicos);
-        } else {
-            //        é solicitada a verificação prévia
-            //        da permissão no arquivo de manifest.xml
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 0, this);
-
-        }
-
     }
 
-
-
     public void btIncluirPontosTuristicos(View view) {
-
         if(helper.etNome.getText().toString().equals("")){
             helper.etNome.setError("Campo [nome] deve ser preenchido.");
             helper.etNome.requestFocus();
             return;
         }
+        else if (helper.ivFoto.getDrawable() == null){
+            Toast.makeText(this,"Insira uma imagem!",Toast.LENGTH_LONG).show();
+            return;
 
+        }
         else {
             PontosTuristicos pontosTuristicos = helper.pegaPontoTuristico();
             pontosTuristicosDatabase = new DatabaseHandler(this);
@@ -112,7 +104,6 @@ public class PontosTuristicosActivity extends AppCompatActivity implements Locat
 
     @Override
     public void onLocationChanged(Location location) {
-
         double longitude = location.getLongitude();
         double latitude = location.getLatitude();
         helper.tvLatitude.setText(String.valueOf(latitude));
@@ -136,7 +127,6 @@ public class PontosTuristicosActivity extends AppCompatActivity implements Locat
 
     //Botão Tirar foto
     public void btTirarFotoOnclik(View view) {
-
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//intent onde ira abrir camera
         startActivityForResult(intent, 1000);// abre a intent da camera
     }
@@ -160,7 +150,6 @@ public class PontosTuristicosActivity extends AppCompatActivity implements Locat
                 Toast.makeText( this, "Erro: " + e.getMessage(), Toast.LENGTH_LONG ).show();
             }
         }
-
     }
 }
 
