@@ -7,7 +7,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.myapplication.R;
 import com.example.user.trabalho1.entidade.PontosTuristicos;
 
 

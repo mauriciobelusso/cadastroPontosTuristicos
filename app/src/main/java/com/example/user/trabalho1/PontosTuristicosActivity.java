@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.myapplication.R;
 import com.example.user.trabalho1.entidade.PontosTuristicos;
 
 import java.io.ByteArrayOutputStream;

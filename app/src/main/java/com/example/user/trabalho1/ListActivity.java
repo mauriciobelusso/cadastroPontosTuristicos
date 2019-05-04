@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.myapplication.R;
 import com.example.user.trabalho1.entidade.PontosTuristicos;
 
 import java.util.List;
